@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+mypy = "*"
+
+[packages]
+django = "==3.0.7"
+pyjwt = "*"
+pillow = "*"
+psycopg2-binary = "*"
+pylint = "*"
+gunicorn = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+drf-yasg = "*"
+whitenoise = "*"
+
+[requires]
+python_version = "3.8"

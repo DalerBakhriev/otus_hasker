@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}{{ question.title }}{% endblock %}
+
+{% block content %}
+
+<h2>{{question.title}}</h2>
+    <p>
+        Asked by: <img src="{{ question.author.get_avatar_url}}" width="35" height="35">
+        {{ question.author.username }}
+    </p>
+    {% if question.tags.all %}
+        Tags:
+        {% for tag in question.tags.all %}
+            <a href="{% url 'questions:search_question_by_tag' tag.id %}">{{ tag.name }}</a>
+        {% endfor %}
+    {% endif %}
+    <p>{{ question.text }}</p>
+    <p>Rating: {{ question.rating }}</p>
+    <em>{{ question.creation_date }}</em>
+
+    <Br>
+    <Br>
+
+    {% if question.correct_answer %}
+        <hr>
+        <strong>Correct answer</strong>
+        <p>
+            <strong>{{ question.correct_answer.author }}</strong>
+        </p>
+        <p>{{ question.correct_answer.text }}</p>
+        <form action="{% url 'questions:answer_action' question.correct_answer.id '+1' %}" method="GET">
+            <button type="submit">Like</button>
+        </form>
+        <form action="{% url 'questions:answer_action' question.correct_answer.id '-1' %}" method="GET">
+            <button type="submit">Dislike</button>
+        </form>
+        <p>Rating: {{ question.correct_answer.rating }}</p>
+        <em>{{ question.correct_answer.creation_date }}</em>
+    {% endif %}
+
+    <hr>
+
+    {% if answers %}
+        {% for answer in answers %}
+            <p>
+            <strong>{{ answer.author }}</strong>
+            </p>
+            <p>{{ answer.text }}</p>
+            {% if user.is_authenticated %}
+                <form action="{% url 'questions:answer_action' answer.id '+1' %}" method="GET">
+                    <button type="submit">Like</button>
+                </form>
+                <form action="{% url 'questions:answer_action' answer.id '-1' %}" method="GET">
+                    <button type="submit">Dislike</button>
+                </form>
+                {% if user == question.author %}
+                    <form action="{% url 'questions:mark_answer_as_correct' question.id answer.id %}" method="GET">
+                        <button type="submit">Mark answer as correct</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+            <p>Rating: {{ answer.rating }}</p>
+            <em>{{ answer.creation_date }}</em>
+            <Br>
+            <Br>
+        {% endfor %}
+    {% endif %}
+    <form action="{% url 'questions:add_answer' question.id %}" method="POST">
+        {% csrf_token %}
+        <textarea name="text" placeholder="Текст ответа" cols="50" rows="15" required></textarea><br>
+        <button type="submit">Оставить ответ</button>
+    </form>
+
+{% endblock %}
