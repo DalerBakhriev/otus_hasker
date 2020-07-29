@@ -19,6 +19,3 @@ class User(AbstractUser):
     def get_avatar_url(self):
         default_avatar_url = os.path.join(settings.STATIC_URL, "img/default_avatar.jpg")
         return self.avatar.url if self.avatar else default_avatar_url
-
-
-
